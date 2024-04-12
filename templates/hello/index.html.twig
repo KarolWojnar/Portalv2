@@ -4,8 +4,16 @@
 
 {% block body %}
     <div>
-        {% for message in messages %}
-            {{ message }} <hr />
-        {% endfor %}
+        {% if messages|length > 0 %}
+            {% for key, message in messages|slice(0, limit) %}
+                <a href="{{ path('app_show_one', { id: key }) }}">{{ message.message }}</a>
+                <div style="color: #2f4e00">
+                    {{ include('hello/_message.html.twig') }}
+                </div>
+                 <hr />
+            {% endfor %}
+        {% else %}
+            There is nothing here yet!
+        {% endif %}
     </div>
 {% endblock %}
