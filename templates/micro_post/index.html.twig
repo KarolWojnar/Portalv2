@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Posts{% endblock %}
+
+{% block body %}
+    <div>
+        {% if posts|length > 0 %}
+            {% for post in posts %}
+                <a href="{{ path('app_show_micro_post_one', { post: post.id }) }}">
+                    {{ post.title }}
+                </a>
+                <hr />
+            {% endfor %}
+        {% else %}
+            There is nothing here yet!
+        {% endif %}
+    </div>
+{% endblock %}
