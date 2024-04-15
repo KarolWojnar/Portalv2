@@ -36,7 +36,6 @@ class MicroPostController extends AbstractController
         $form = $this->createFormBuilder($microPost)
             ->add('title')
             ->add('text')
-            ->add('submit', SubmitType::class, ['label' => 'Save'])
             ->getForm();
 
         $form->handleRequest($request);
@@ -46,6 +45,11 @@ class MicroPostController extends AbstractController
             $post->setCreated(new DateTime());
             $entityManager->persist($post);
             $entityManager->flush();
+
+
+            $this->addFlash('success', 'Your post have been added!');
+
+            return $this->redirectToRoute('app_micro_post');
         }
 
         return $this->render(
