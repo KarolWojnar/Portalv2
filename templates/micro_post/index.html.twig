@@ -3,13 +3,10 @@
 {% block title %}Posts{% endblock %}
 
 {% block body %}
-    <div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
         {% if posts|length > 0 %}
             {% for post in posts %}
-                <a href="{{ path('app_show_micro_post_one', { post: post.id }) }}">
-                    {{ post.title }}
-                </a>
-                <hr />
+                {{ include('micro_post/_post.html.twig', {post: post}) }}
             {% endfor %}
         {% else %}
             There is nothing here yet!
