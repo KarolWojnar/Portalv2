@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\MicroPost;
+use App\Form\MicroPostType;
 use App\Repository\MicroPostRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,11 +34,7 @@ class MicroPostController extends AbstractController
 
     #[Route('/micro-post/add', name: 'app_micro_post_add', priority: 2)]
     public function add(Request $request, EntityManagerInterface $entityManager): Response {
-        $microPost = new MicroPost();
-        $form = $this->createFormBuilder($microPost)
-            ->add('title')
-            ->add('text')
-            ->getForm();
+        $form = $this->createForm(MicroPostType::class, new MicroPost());
 
         $form->handleRequest($request);
 
@@ -46,7 +44,6 @@ class MicroPostController extends AbstractController
             $entityManager->persist($post);
             $entityManager->flush();
 
-
             $this->addFlash('success', 'Your post have been added!');
 
             return $this->redirectToRoute('app_micro_post');
@@ -54,6 +51,30 @@ class MicroPostController extends AbstractController
 
         return $this->render(
             'micro_post/add.html.twig',
+            [
+                'form' => $form
+            ]
+        );
+    }
+
+    #[Route('/micro-post/{post}/edit', name: 'app_micro_post_edit')]
+    public function edit(Request $request, MicroPost $post, EntityManagerInterface $entityManager) {
+        $form = $this->createForm(MicroPostType::class, $post);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post = $form->getData();
+            $entityManager->persist($post);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Your post have been updated!');
+
+            return $this->redirectToRoute('app_micro_post');
+        }
+
+        return $this->render(
+            'micro_post/edit.html.twig',
             [
                 'form' => $form
             ]

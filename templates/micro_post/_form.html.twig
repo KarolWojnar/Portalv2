@@ -1,0 +1,19 @@
+{{ form_start(form) }}
+<div>{{ form_errors(form) }}</div>
+
+<div>
+    {{ form_label(form.title, 'Enter title')}}
+</div>
+<div>
+    {{ form_widget(form.title, {'attr': {'style': 'color: blue'}})}}
+</div>
+<div>
+    {{ form_label(form.text, 'Enter text of post')}}
+</div>
+<div>
+    {{ form_widget(form.text, {'attr': {'style': 'color: blue'}})}}
+</div>
+<div>
+    <button type="submit">Save!</button>
+</div>
+{{ form_end(form) }}
