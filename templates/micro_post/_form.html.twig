@@ -1,4 +1,4 @@
-{{ form_start(form) }}
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 <div>{{ form_errors(form) }}</div>
 
 <div>
@@ -9,7 +9,7 @@
 <div>
     {{ form_label(form.text, 'Enter text of post', {'label_attr': {'class': 'block text-sm text-gray-700 dark:text-gray-300'}})}}
     {{ form_widget(form.text, {'attr': {'class': 'block w-full shadow-sm border-gray-300 dark:border-transparent dark:text-gray-800 rounded-md vorder p-2 mt-1 mb-2'}})}}
-    {{ form_errors(form.title) }}
+    {{ form_errors(form.text) }}
 </div>
 <div>
     <button type="submit" class="block w-full shadow-sn borer-transparent p-2 mt-2 mb-1 rounded-md border bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400">Save!</button>
