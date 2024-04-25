@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class MicroPostController extends AbstractController
 {
@@ -28,6 +29,7 @@ class MicroPostController extends AbstractController
 
 
     #[Route('/micro-post/{post}', name: 'app_show_micro_post_one')]
+    #[IsGranted(MicroPost::VIEW, 'post')]
     public function showOne(MicroPost $post): Response {
         return $this->render('micro_post/show.html.twig', [
             'post' => $post,
@@ -35,16 +37,17 @@ class MicroPostController extends AbstractController
     }
 
     #[Route('/micro-post/add', name: 'app_micro_post_add', priority: 2)]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function add(
         Request $request,
         EntityManagerInterface $entityManager): Response {
+
         $form = $this->createForm(MicroPostType::class, new MicroPost());
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $post = $form->getData();
-            $post->setCreated(new DateTime());
             $post->setAuthor($this->getUser());
             $entityManager->persist($post);
             $entityManager->flush();
@@ -63,6 +66,7 @@ class MicroPostController extends AbstractController
     }
 
     #[Route('/micro-post/{post}/edit', name: 'app_micro_post_edit')]
+    #[IsGranted(MicroPost::EDIT, 'post')]
     public function edit(Request $request, MicroPost $post, EntityManagerInterface $entityManager) {
         $form = $this->createForm(MicroPostType::class, $post);
 
@@ -88,6 +92,7 @@ class MicroPostController extends AbstractController
     }
 
     #[Route('/micro-post/{post}/comment', name: 'app_micro_post_comment')]
+    #[IsGranted('ROLE_COMMENTER')]
     public function addComment(
         Request $request, MicroPost $post,
         EntityManagerInterface $entityManager
