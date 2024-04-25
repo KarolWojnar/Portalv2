@@ -35,7 +35,9 @@ class MicroPostController extends AbstractController
     }
 
     #[Route('/micro-post/add', name: 'app_micro_post_add', priority: 2)]
-    public function add(Request $request, EntityManagerInterface $entityManager): Response {
+    public function add(
+        Request $request,
+        EntityManagerInterface $entityManager): Response {
         $form = $this->createForm(MicroPostType::class, new MicroPost());
 
         $form->handleRequest($request);
@@ -43,6 +45,7 @@ class MicroPostController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $post = $form->getData();
             $post->setCreated(new DateTime());
+            $post->setAuthor($this->getUser());
             $entityManager->persist($post);
             $entityManager->flush();
 
@@ -85,7 +88,10 @@ class MicroPostController extends AbstractController
     }
 
     #[Route('/micro-post/{post}/comment', name: 'app_micro_post_comment')]
-    public function addComment(Request $request, MicroPost $post, EntityManagerInterface $entityManager) {
+    public function addComment(
+        Request $request, MicroPost $post,
+        EntityManagerInterface $entityManager
+    ) {
         $form = $this->createForm(CommentType::class, new Comment());
 
         $form->handleRequest($request);
@@ -93,6 +99,7 @@ class MicroPostController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $comment = $form->getData();
             $comment->setPost($post);
+            $comment->setAuthor($this->getUser());
             $entityManager->persist($comment);
             $entityManager->flush();
 

@@ -29,10 +29,18 @@
 
             <div class="text-right">
                 <div class="text-sm text-gray-400 dark:text-gray-500">
-                    <div>Login & Registration</div>
-                    <div class="bg-gray-900 hover:bg-gray-700 text-gray-700 hover:text-gray-900 text-center font-bold py-2 px-auto rounded-full">
-                        <a href="{{ path('app_micro_post_add') }}">Add new</a>
-                    </div>
+                    {% if app.user %}
+                        <div>
+                            <a href="{{ path('app_logout') }}">Logout</a>
+                        </div>
+                        <div class="">
+                            <a href="{{ path('app_micro_post_add') }}">Add new</a>
+                        </div>
+                    {% else %}
+                        <div>
+                            <a href="{{ path('app_login') }}">Login</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
